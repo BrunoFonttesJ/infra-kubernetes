@@ -43,7 +43,7 @@ kubectl apply -f deployment-config.yml
 
 Exposing the application to the host machine:
 ```
-kubectl port-forward service/nodejs-app-lb  3000:3000
+kubectl port-forward service/io-heavy-app  3000:3000 -n development
 ```
 
 You can also launch minikube dashboard to follow your cluster resources:

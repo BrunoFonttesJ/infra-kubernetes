@@ -47,7 +47,7 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    app: nodejs-app
+    app.kubernetes.io/name: nodejs-app
   ports:
     - port: 3000
       protocol: TCP
