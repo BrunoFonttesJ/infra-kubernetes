@@ -1,29 +1,49 @@
-# minikube-poc
+# infra-kubernetes
 
-Install minikube
+This project builds an infrastructure capable of supporting thousands of concurrent requests for an endpoint simulating a highly demmanded GET api.
 
-//Ensure that the daemon.json is empty
+Concepts explored:
+- health check
+- load balancing
+- ingress
 
-eval $(minikube docker-env)
 
-minikube start
+Pre-requirements:
+- [Docker](https://docs.docker.com/engine/install/)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [minikube](https://minikube.sigs.k8s.io/docs/start/)
 
-kubectl apply -f deployment-config.yml 
 
-check services:
-kubectl get services
+Building the dockerfile image:
 
-delete services
-kubectl delete services {service name}
+Let's start by building our docker image:
+```
+docker build -t hello-world:latest .
+```
 
-check deploys
-kubectl get deployments
+Starting minikube:
+```
+minikube start --driver=docker
+```
 
-describe deployment
-kubectl describe deployment {deployment-name}
+Pointing your shell to minikube's docker-daemon:
+```
+eval $(minikube -p minikube docker-env)
+```
 
-check pods
-kubectl get pods
+Deploying the application:
+```
+kubectl apply -f deployment-config.yml
+```
 
-launch dashboard
+Exposing the application to the host machine:
+```
+kubectl port-forward service/nodejs-app-lb  3000:3000
+```
+
+You can also launch minikube dashboard to follow your cluster resources:
+```
 minikube dashboard
+```
+
+Executing the load tests:

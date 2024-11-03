@@ -4,7 +4,7 @@ const PORT = 3000
 
 app.use(express.json())
 
-app.get("/hello", (req,res)=>{
+app.get("/health", (req,res)=>{
     res.json({message:"hello world"})
 })
 
