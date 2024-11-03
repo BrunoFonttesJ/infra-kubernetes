@@ -1,19 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: io-heavy-app
+  namespace: development
   labels:
-    app.kubernetes.io/name: io-heavy-app
+    app.kubernetes.io/name: nodejs-app
     app.kubernetes.io/component: app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: io-heavy-app
+      app.kubernetes.io/name: nodejs-app
       app.kubernetes.io/component: app
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: io-heavy-app
+        app.kubernetes.io/name: nodejs-app
         app.kubernetes.io/component: app
     spec:
       containers:
@@ -33,8 +35,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: io-heavy-app
+  namespace: development
   labels:
-    app.kubernetes.io/name: io-heavy-app
+    app.kubernetes.io/name: nodejs-app
     app.kubernetes.io/component: app
   annotations:
     service.beta.kubernetes.io/oci-load-balancer-shape: "flexible"
@@ -43,29 +47,30 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    app: io-heavy-app
+    app: nodejs-app
   ports:
-  - port: 3000
-    protocol: TCP
+    - port: 3000
+      protocol: TCP
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
+  name: io-heavy-app
+  namespace: development
   labels:
-    app.kubernetes.io/name: io-heavy-app
+    app.kubernetes.io/name: nodejs-app
     app.kubernetes.io/component: app
-  namespace: default
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: io-heavy-app
+    name: nodejs-app
   minReplicas: 1
   maxReplicas: 10
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 60
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60

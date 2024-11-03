@@ -31,6 +31,11 @@ Pointing your shell to minikube's docker-daemon:
 eval $(minikube -p minikube docker-env)
 ```
 
+Creating the development namespace:
+```
+kubectl create -f namespace-dev.yml
+```
+
 Deploying the application:
 ```
 kubectl apply -f deployment-config.yml
