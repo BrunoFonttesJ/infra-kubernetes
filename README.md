@@ -47,3 +47,4 @@ minikube dashboard
 ```
 
 Executing the load tests:
+WIP

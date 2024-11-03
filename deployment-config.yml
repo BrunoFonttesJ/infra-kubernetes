@@ -1,7 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nodejs-hello-deployment
+  labels:
+    app.kubernetes.io/name: io-heavy-app
+    app.kubernetes.io/component: app
 spec:
   replicas: 1
   selector:
@@ -29,9 +31,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: nodejs-app-lb
   labels:
-    app: nodejs-app-lb
+    app.kubernetes.io/name: io-heavy-app
+    app.kubernetes.io/component: app
   annotations:
     service.beta.kubernetes.io/oci-load-balancer-shape: "flexible"
     service.beta.kubernetes.io/oci-load-balancer-shape-flex-min: "10"
@@ -47,7 +49,9 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: nodejs-app
+  labels:
+    app.kubernetes.io/name: io-heavy-app
+    app.kubernetes.io/component: app
   namespace: default
 spec:
   scaleTargetRef:
