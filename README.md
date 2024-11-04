@@ -3,9 +3,11 @@
 This project builds an infrastructure capable of supporting thousands of concurrent requests for an endpoint simulating a highly demmanded GET api.
 
 Concepts explored:
-- health check
-- load balancing
-- ingress
+- Liveness probe
+- Load balancing
+- Auto scaling
+- Namespaces
+- Gateway API
 
 
 Pre-requirements:
