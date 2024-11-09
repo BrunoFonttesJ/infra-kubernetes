@@ -1,9 +1,10 @@
 # minikube-poc
 
 Pre-requirements:
-- docker
-- kubectl
-- minikube
+- [docker](https://docs.docker.com/engine/install/)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [minikube](https://minikube.sigs.k8s.io/docs/start)
+- [helm](https://helm.sh/docs/intro/install/)
 
 
 Building the dockerfile image:
@@ -16,6 +17,21 @@ docker build -t hello-world:latest .
 Starting minikube:
 ```
 minikube start --driver=docker
+```
+
+Installing Kubernetes Gateway API:
+```
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.0/standard-install.yaml
+```
+
+Installing NGINX Gateway API:
+```
+kubectl kustomize "https://github.com/nginxinc/nginx-gateway-fabric/config/crd/gateway-api/standard?ref=v1.4.0" | kubectl apply -f -
+```
+
+Install NGINX Gateway Fabric:
+```
+helm install ngf oci://ghcr.io/nginxinc/charts/nginx-gateway-fabric --create-namespace -n nginx-gateway
 ```
 
 Deploying the application:
