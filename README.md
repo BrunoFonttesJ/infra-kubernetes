@@ -16,34 +16,67 @@ Pre-requirements:
 - [minikube](https://minikube.sigs.k8s.io/docs/start/)
 
 
-Building the dockerfile image:
+#### Build the dockerfile image
 
 Let's start by building our docker image:
 ```
 docker build -t hello-world:latest .
 ```
 
-Starting minikube:
+#### Start minikube:
 ```
 minikube start --driver=docker
 ```
 
-Pointing your shell to minikube's docker-daemon:
+## Installing NGINX Gateway
+
+#### Kubernetes Gateway API
+
+The Gateway API Resources from the standard channel must be installed before deploying NGINX Gateway Fabric.
 ```
-eval $(minikube -p minikube docker-env)
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.0/standard-install.yaml
 ```
 
-Creating the development namespace:
+
+#### API Resources
+```
+kubectl kustomize "https://github.com/nginxinc/nginx-gateway-fabric/config/crd/gateway-api/standard?ref=v1.4.0" | kubectl apply -f -
+```
+
+##### CRDs
+```
+kubectl apply -f https://raw.githubusercontent.com/nginxinc/nginx-gateway-fabric/v1.4.0/deploy/crds.yaml
+```
+
+##### Deploy
+By default, NGINX Gateway Fabric is installed in the nginx-gateway namespace. You can deploy in another namespace by modifying the manifest files.
+```
+kubectl apply -f https://raw.githubusercontent.com/nginxinc/nginx-gateway-fabric/v1.4.0/deploy/default/deploy.yaml
+```
+
+##### Verify the Deployment
+```
+kubectl get pods -n nginx-gateway
+```
+The output should look similar to this:
+```
+NAME                             READY   STATUS    RESTARTS   AGE
+nginx-gateway-5d4f4c7db7-xk2kq   2/2     Running   0          112s
+```
+
+## Installing the application
+
+##### Create the development namespace
 ```
 kubectl create -f namespace-dev.yml
 ```
 
-Deploying the application:
+##### Deploy the application
 ```
 kubectl apply -f deployment-config.yml
 ```
 
-Exposing the application to the host machine:
+##### Expose the application to the host machine
 ```
 kubectl port-forward service/io-heavy-app  3000:3000 -n development
 ```
@@ -53,5 +86,5 @@ You can also launch minikube dashboard to follow your cluster resources:
 minikube dashboard
 ```
 
-Executing the load tests:
+## Executing the load tests:
 WIP
