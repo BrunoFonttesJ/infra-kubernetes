@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: io-heavy-app
-  namespace: development
+  name: home
+  namespace: site-ns
   labels:
     app.kubernetes.io/name: nodejs-app
     app.kubernetes.io/component: app
@@ -41,8 +41,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: io-heavy-app
-  namespace: development
+  name: home
+  namespace: site-ns
   labels:
     app.kubernetes.io/name: nodejs-app
     app.kubernetes.io/component: app
@@ -61,8 +61,8 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: io-heavy-app
-  namespace: development
+  name: home
+  namespace: site-ns
   labels:
     app.kubernetes.io/name: nodejs-app
     app.kubernetes.io/component: app

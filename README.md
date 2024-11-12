@@ -68,7 +68,7 @@ nginx-gateway-5d4f4c7db7-xk2kq   2/2     Running   0          112s
 
 ##### Create the development namespace
 ```
-kubectl create -f namespace-dev.yml
+kubectl create -f namespaces.yml
 ```
 
 ##### Deploy the application
