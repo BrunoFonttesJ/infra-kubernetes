@@ -8,6 +8,8 @@ spec:
   parentRefs:
   - name: shared-gateway
     namespace: infra-ns
+  hostnames:
+    - "my-mkt-place.com"
   rules:
   - matches:
     - path:

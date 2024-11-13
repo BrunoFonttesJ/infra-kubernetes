@@ -50,8 +50,13 @@ kubectl apply -f https://raw.githubusercontent.com/nginxinc/nginx-gateway-fabric
 
 ##### Deploy
 By default, NGINX Gateway Fabric is installed in the nginx-gateway namespace. You can deploy in another namespace by modifying the manifest files.
+In this application we are going to use a service of type NodePort to expose it to the host:
 ```
-kubectl apply -f https://raw.githubusercontent.com/nginxinc/nginx-gateway-fabric/v1.4.0/deploy/default/deploy.yaml
+kubectl apply -f https://raw.githubusercontent.com/nginxinc/nginx-gateway-fabric/v1.4.0/deploy/nodeport/deploy.yaml
+```
+As we are using minikube, in order to get the node external ip we can execute the following command:
+```
+minikube ip
 ```
 
 ##### Verify the Deployment
@@ -78,7 +83,7 @@ kubectl apply -f deployment-config.yml
 
 ##### Expose the application to the host machine
 ```
-kubectl port-forward service/io-heavy-app  3000:3000 -n development
+kubectl port-forward service/home  3000:3000 -n site-ns
 ```
 
 You can also launch minikube dashboard to follow your cluster resources:
