@@ -16,4 +16,5 @@ spec:
         value: /
     backendRefs:
     - name: home
+      namespace: site-ns
       port: 3000
