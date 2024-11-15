@@ -30,8 +30,8 @@ spec:
   rules:
   - matches:
     - path:
-        value: /
+        value: /api # this route needs to be defined in the api as well
     backendRefs:
-    - name: home-test
+    - name: home
       namespace: site-ns
       port: 80

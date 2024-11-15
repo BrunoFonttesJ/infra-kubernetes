@@ -54,10 +54,6 @@ In this application we are going to use a service of type NodePort to expose it 
 ```
 kubectl apply -f https://raw.githubusercontent.com/nginxinc/nginx-gateway-fabric/v1.4.0/deploy/nodeport/deploy.yaml
 ```
-As we are using minikube, in order to get the node external ip we can execute the following command:
-```
-minikube ip
-```
 
 ##### Verify the Deployment
 ```
@@ -82,8 +78,13 @@ kubectl apply -f deployment-config.yml
 ```
 
 ##### Expose the application to the host machine
+As this solution was originally built in mac os and the docker driver has a network limitation on it, we cannot use the pattern <minikube ip>:<nginx svc node port>.
+
+More details on minikube docs: [link](https://minikube.sigs.k8s.io/docs/handbook/accessing/#using-minikube-service-with-tunnel)
+
+** consider chaging driver to hyperkit on mac to cover more features
 ```
-kubectl port-forward service/home  3000:3000 -n site-ns
+kubectl port-forward svc/nginx-gateway 8080:80 -n nginx-gateway
 ```
 
 You can also launch minikube dashboard to follow your cluster resources:

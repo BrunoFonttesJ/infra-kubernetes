@@ -33,7 +33,7 @@ spec:
               memory: "256Mi"
           livenessProbe:
             httpGet:
-              path: /health
+              path: /api/health
               port: 3000
             initialDelaySeconds: 15
             periodSeconds: 5
@@ -41,7 +41,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: home-test
+  name: home
   namespace: site-ns
   labels:
     app.kubernetes.io/name: nodejs-app
