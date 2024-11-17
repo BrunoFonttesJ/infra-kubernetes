@@ -30,7 +30,7 @@ spec:
   rules:
   - matches:
     - path:
-        value: /api # this route needs to be defined in the api as well
+        value: /site/home/ # this route needs to be defined in the api as well
     backendRefs:
     - name: home
       namespace: site-ns

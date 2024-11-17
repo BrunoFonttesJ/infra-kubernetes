@@ -3,10 +3,14 @@ const { router } = require("./routes")
 const app = express()
 const PORT = 3000
 
+
 app.use(express.json())
+app.get("/health", (req, res) => {
+    res.json({ message: "hello world" })
+})
 
-app.use("/api", router)
-
+const root_path = "/site/home"
+app.use(root_path, router)
 
 const server = app.listen(PORT, () => {
     console.log(`Running on port ${PORT}`);

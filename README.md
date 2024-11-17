@@ -16,13 +16,6 @@ Pre-requirements:
 - [minikube](https://minikube.sigs.k8s.io/docs/start/)
 
 
-#### Build the dockerfile image
-
-Let's start by building our docker image:
-```
-docker build -t hello-world:latest .
-```
-
 #### Start minikube:
 ```
 minikube start --driver=docker
@@ -70,6 +63,17 @@ nginx-gateway-5d4f4c7db7-xk2kq   2/2     Running   0          112s
 ##### Create the development namespace
 ```
 kubectl create -f namespaces.yml
+```
+
+#### Build the application image
+
+Point your shell to minikube's docker-daemon, run:
+ eval $(minikube -p minikube docker-env)
+```
+
+Now, let's start by building our docker image into minikube's docker-deamon:
+```
+docker build -t hello-world:latest .
 ```
 
 ##### Deploy the application
