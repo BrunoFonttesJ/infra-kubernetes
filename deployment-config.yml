@@ -19,8 +19,8 @@ spec:
         app.kubernetes.io/component: app
     spec:
       containers:
-        - name: nodejs-hello-app
-          image: hello-world:latest
+        - name: home-service
+          image: home-service:latest
           imagePullPolicy: Never
           ports:
             - containerPort: 3000

@@ -68,12 +68,12 @@ kubectl create -f namespaces.yml
 #### Build the application image
 
 Point your shell to minikube's docker-daemon, run:
- eval $(minikube -p minikube docker-env)
+make use-minikube-docker
 ```
 
 Now, let's start by building our docker image into minikube's docker-deamon:
 ```
-docker build -t hello-world:latest .
+make build-home
 ```
 
 ##### Deploy the application
