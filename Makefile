@@ -14,3 +14,13 @@ build-checkout:
 	@printf "\n\n++++++++++++++ STARTING build-checkout ++++++++++++++++++\n";
 	cd src/checkout; docker build -t checkout-service:latest .
 	@printf "\n\n++++++++++++++ DONE WITH build-checkout ++++++++++++++++++\n";
+
+deploy-home: use-minikube-docker build-home
+	@printf "\n\n++++++++++++++ STARTING deploy-home ++++++++++++++++++\n";
+	kubectl apply -f deployment-config.yml
+	@printf "\n\n++++++++++++++ DONE WITH deploy-home ++++++++++++++++++\n";
+
+deploy-checkout: use-minikube-docker build-checkout
+	@printf "\n\n++++++++++++++ STARTING deploy-home ++++++++++++++++++\n";
+	kubectl apply -f deployment-config.yml
+	@printf "\n\n++++++++++++++ DONE WITH deploy-home ++++++++++++++++++\n";
