@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: io-heavy-app
-  namespace: development
+  name: home
+  namespace: site-ns
   labels:
     app.kubernetes.io/name: nodejs-app
     app.kubernetes.io/component: app
@@ -41,8 +41,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: io-heavy-app
-  namespace: development
+  name: home
+  namespace: site-ns
   labels:
     app.kubernetes.io/name: nodejs-app
     app.kubernetes.io/component: app
@@ -55,14 +55,16 @@ spec:
   selector:
     app.kubernetes.io/name: nodejs-app
   ports:
-    - port: 3000
+    - port: 80
+      targetPort: 3000
       protocol: TCP
+      name: http
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: io-heavy-app
-  namespace: development
+  name: home
+  namespace: site-ns
   labels:
     app.kubernetes.io/name: nodejs-app
     app.kubernetes.io/component: app
@@ -70,7 +72,7 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: nodejs-app
+    name: home
   minReplicas: 1
   maxReplicas: 10
   metrics:

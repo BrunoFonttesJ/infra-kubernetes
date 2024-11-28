@@ -1,18 +1,16 @@
 const express = require("express")
+const { router } = require("./routes")
 const app = express()
 const PORT = 3000
 
-app.use(express.json())
 
+app.use(express.json())
 app.get("/health", (req, res) => {
     res.json({ message: "hello world" })
 })
 
-app.get("/heavy-task", (req, res) => {
-    setTimeout(() => {
-        res.json({ message: "heavy task completed!" })
-    }, (10000));
-})
+const root_path = "/site/home"
+app.use(root_path, router)
 
 const server = app.listen(PORT, () => {
     console.log(`Running on port ${PORT}`);
