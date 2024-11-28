@@ -6,15 +6,15 @@ metadata:
 spec:
   gatewayClassName: nginx
   listeners:
-  - name: http
-    port: 80
-    protocol: HTTP
-    allowedRoutes:
-      namespaces:
-        from: Selector
-        selector:
-          matchLabels:
-            shared-gateway-access: "true"
+    - name: http
+      port: 80
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              shared-gateway-access: "true"
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -23,16 +23,21 @@ metadata:
   namespace: site-ns
 spec:
   parentRefs:
-  - name: shared-gateway
-    namespace: infra-ns
+    - name: shared-gateway
+      namespace: infra-ns
   rules:
-  - matches:
-    - path:
-        value: /site/home/ # this route needs to be defined in the api as well
-    backendRefs:
-    - name: home
-      namespace: site-ns
-      port: 80
+    - matches:
+        - path:
+            value: /site/home/
+      backendRefs:
+        - name: home
+          namespace: site-ns
+          port: 80
+          weight: 50
+        - name: canary-home
+          namespace: site-ns
+          port: 80
+          weight: 50
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -41,13 +46,13 @@ metadata:
   namespace: site-ns
 spec:
   parentRefs:
-  - name: shared-gateway
-    namespace: infra-ns
+    - name: shared-gateway
+      namespace: infra-ns
   rules:
-  - matches:
-    - path:
-        value: /site/checkout/ # this route needs to be defined in the api as well
-    backendRefs:
-    - name: checkout
-      namespace: site-ns
-      port: 80
+    - matches:
+        - path:
+            value: /site/checkout/ # this route needs to be defined in the api as well
+      backendRefs:
+        - name: checkout
+          namespace: site-ns
+          port: 80

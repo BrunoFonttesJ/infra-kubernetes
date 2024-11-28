@@ -10,6 +10,12 @@ build-home:
 	cd src/home; docker build -t home-service:latest .
 	@printf "\n\n++++++++++++++ DONE WITH build-home ++++++++++++++++++\n";
 
+
+build-canary-home:
+	@printf "\n\n++++++++++++++ STARTING build-home ++++++++++++++++++\n";
+	cd src/canary-home; docker build -t canary-home-service:latest .
+	@printf "\n\n++++++++++++++ DONE WITH build-home ++++++++++++++++++\n";
+
 build-checkout:
 	@printf "\n\n++++++++++++++ STARTING build-checkout ++++++++++++++++++\n";
 	cd src/checkout; docker build -t checkout-service:latest .
@@ -23,6 +29,12 @@ deploy-namespaces:
 deploy-home: build-home
 	@printf "\n\n++++++++++++++ STARTING deploy-home ++++++++++++++++++\n";
 	cd src/home; kubectl apply -f deployment-config.yml
+	@printf "\n\n++++++++++++++ DONE WITH deploy-home ++++++++++++++++++\n";
+
+
+deploy-canary-home: build-canary-home
+	@printf "\n\n++++++++++++++ STARTING deploy-home ++++++++++++++++++\n";
+	cd src/canary-home; kubectl apply -f deployment-config.yml
 	@printf "\n\n++++++++++++++ DONE WITH deploy-home ++++++++++++++++++\n";
 
 deploy-checkout:  build-checkout
