@@ -86,7 +86,7 @@ kubectl create -f namespaces.yml
 Point your shell to minikube's docker-daemon, run:
 
 ```
-eval $$(minikube -p minikube docker-env)
+eval $(minikube -p minikube docker-env)
 ```
 
 Now, let's start by building our home service image into minikube's docker-deamon:
@@ -125,7 +125,7 @@ As this solution was originally built in mac os and the docker driver has a netw
 
 More details on minikube docs: [link](https://minikube.sigs.k8s.io/docs/handbook/accessing/#using-minikube-service-with-tunnel)
 
-\*\* consider chaging driver to hyperkit on mac to cover more features
+\* Consider chaging driver to hyperkit on mac to cover more features
 
 ```
 kubectl port-forward svc/nginx-gateway 8080:80 -n nginx-gateway
@@ -136,6 +136,10 @@ You can also launch minikube dashboard to follow your cluster resources:
 ```
 minikube dashboard
 ```
+
+##### Testing the app endpoints
+
+
 
 ## Executing the load tests:
 

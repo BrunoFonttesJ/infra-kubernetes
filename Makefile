@@ -1,10 +1,5 @@
 SHELL := /bin/bash
 
-use-minikube-docker:
-	@printf "\n\n++++++++++++++ STARTING use-minikube-docker ++++++++++++++++++\n";
-	eval $$(minikube -p minikube docker-env)
-	@printf "\n\n++++++++++++++ DONE WITH use-minikube-docker ++++++++++++++++++\n";
-
 build-home:
 	@printf "\n\n++++++++++++++ STARTING build-home ++++++++++++++++++\n";
 	cd src/home; docker build -t home-service:latest .
@@ -31,7 +26,6 @@ deploy-home: build-home
 	cd src/home; kubectl apply -f deployment-config.yml
 	@printf "\n\n++++++++++++++ DONE WITH deploy-home ++++++++++++++++++\n";
 
-
 deploy-canary-home: build-canary-home
 	@printf "\n\n++++++++++++++ STARTING deploy-home ++++++++++++++++++\n";
 	cd src/canary-home; kubectl apply -f deployment-config.yml
@@ -48,7 +42,7 @@ deploy-gateway-api:
 	@printf "\n\n++++++++++++++ DONE WITH deploy-gateway-api ++++++++++++++++++\n";
 
 
-deploy: use-minikube-docker deploy-namespaces deploy-home deploy-checkout deploy-gateway-api
+deploy: deploy-namespaces deploy-home deploy-canary-home deploy-checkout deploy-gateway-api
 	@printf "\n\n++++++++++++++ STARTING deploy ++++++++++++++++++\n";
 	@printf "\n\n++++++++++++++ DONE WITH deploy ++++++++++++++++++\n";
 
