@@ -15,14 +15,17 @@ Concepts explored:
     - Weight based
 
 Roadmap:
+  - Gateway API
+    - HTTPS TLS setup
   - Canary release
     - http header based
   - Blue-green deployment
+  - Log agent configuration
+  - Container registry
+  - CI configuration
+  - CD configuration
   - Auto scaling
     - Cluster auto scaling - Cloud Provider
-  - Gateway API
-    - HTTPS TLS setup
-  - Log agent configuration
   
 
 Pre-requirements:
