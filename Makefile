@@ -5,7 +5,6 @@ build-home:
 	cd src/home; docker build -t home-service:latest .
 	@printf "\n\n++++++++++++++ DONE WITH build-home ++++++++++++++++++\n";
 
-
 build-canary-home:
 	@printf "\n\n++++++++++++++ STARTING build-home ++++++++++++++++++\n";
 	cd src/canary-home; docker build -t canary-home-service:latest .
@@ -21,17 +20,17 @@ deploy-namespaces:
 	kubectl apply -f namespaces.yml
 	@printf "\n\n++++++++++++++ DONE WITH deploy-namespaces ++++++++++++++++++\n";
 
-deploy-home: build-home
+deploy-home:
 	@printf "\n\n++++++++++++++ STARTING deploy-home ++++++++++++++++++\n";
 	cd src/home; kubectl apply -f deployment-config.yml
 	@printf "\n\n++++++++++++++ DONE WITH deploy-home ++++++++++++++++++\n";
 
-deploy-canary-home: build-canary-home
+deploy-canary-home:
 	@printf "\n\n++++++++++++++ STARTING deploy-home ++++++++++++++++++\n";
 	cd src/canary-home; kubectl apply -f deployment-config.yml
 	@printf "\n\n++++++++++++++ DONE WITH deploy-home ++++++++++++++++++\n";
 
-deploy-checkout:  build-checkout
+deploy-checkout:
 	@printf "\n\n++++++++++++++ STARTING deploy-checkout ++++++++++++++++++\n";
 	cd src/checkout; kubectl apply -f deployment-config.yml
 	@printf "\n\n++++++++++++++ DONE WITH deploy-checkout ++++++++++++++++++\n";
@@ -41,6 +40,9 @@ deploy-gateway-api:
 	kubectl apply -f gateway-api-config.yml
 	@printf "\n\n++++++++++++++ DONE WITH deploy-gateway-api ++++++++++++++++++\n";
 
+build: build-home build-canary-home build-checkout
+	@printf "\n\n++++++++++++++ STARTING build ++++++++++++++++++\n";
+	@printf "\n\n++++++++++++++ DONE WITH build ++++++++++++++++++\n";
 
 deploy: deploy-namespaces deploy-home deploy-canary-home deploy-checkout deploy-gateway-api
 	@printf "\n\n++++++++++++++ STARTING deploy ++++++++++++++++++\n";
