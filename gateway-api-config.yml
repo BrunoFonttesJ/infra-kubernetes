@@ -34,7 +34,7 @@ spec:
           namespace: site-ns
           port: 80
           weight: 50
-        - name: canary-home
+        - name: green-home
           namespace: site-ns
           port: 80
           weight: 50

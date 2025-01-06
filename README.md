@@ -7,15 +7,23 @@ Concepts explored:
 - Liveness probe
 - Load balancing
 - Auto scaling
-    - pods
-    - nodes (TBD)
-        - Cluster auto scaling(cloud provider based (TBD) 
+  - pods
 - Namespaces
 - Gateway API
   - Nginx Gateway Fabric
-    - HTTPS (TBD)
-  - Canary release (TBD)
-  - Ingesting logs with log agent (TBD)
+  - Blue-Green release
+  - Canary release
+
+Roadmap:
+
+- Gateway API
+  - HTTPS TLS setup
+- Log agent configuration
+- Container registry
+- CI configuration
+- CD configuration
+- Auto scaling
+  - Cluster auto scaling - Cloud Provider
 
 Pre-requirements:
 
@@ -23,7 +31,7 @@ Pre-requirements:
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
 - [minikube](https://minikube.sigs.k8s.io/docs/start/)
 
-#### Start minikube:
+## Start minikube:
 
 ```
 minikube start --driver=docker
@@ -31,7 +39,7 @@ minikube start --driver=docker
 
 ## Installing NGINX Gateway
 
-#### Kubernetes Gateway API
+### Kubernetes Gateway API
 
 The Gateway API Resources from the standard channel must be installed before deploying NGINX Gateway Fabric.
 
@@ -39,19 +47,19 @@ The Gateway API Resources from the standard channel must be installed before dep
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.0/standard-install.yaml
 ```
 
-#### API Resources
+### API Resources
 
 ```
 kubectl kustomize "https://github.com/nginxinc/nginx-gateway-fabric/config/crd/gateway-api/standard?ref=v1.4.0" | kubectl apply -f -
 ```
 
-##### CRDs
+### CRDs
 
 ```
 kubectl apply -f https://raw.githubusercontent.com/nginxinc/nginx-gateway-fabric/v1.4.0/deploy/crds.yaml
 ```
 
-##### Deploy
+### Deploy
 
 By default, NGINX Gateway Fabric is installed in the nginx-gateway namespace. You can deploy in another namespace by modifying the manifest files.
 In this application we are going to use a service of type NodePort to expose it to the host:
@@ -60,7 +68,7 @@ In this application we are going to use a service of type NodePort to expose it 
 kubectl apply -f https://raw.githubusercontent.com/nginxinc/nginx-gateway-fabric/v1.4.0/deploy/nodeport/deploy.yaml
 ```
 
-##### Verify the Deployment
+### Verify the Deployment
 
 ```
 kubectl get pods -n nginx-gateway
@@ -75,71 +83,80 @@ nginx-gateway-5d4f4c7db7-xk2kq   2/2     Running   0          112s
 
 ## Installing the application
 
-##### Create the development namespace
+### Build
 
-```
-kubectl create -f namespaces.yml
-```
-
-#### Build the application image
-
-Point your shell to minikube's docker-daemon, run:
+Point your shell to minikube's docker-daemon by running the following:
 
 ```
 eval $(minikube -p minikube docker-env)
 ```
 
-Now, let's start by building our home service image into minikube's docker-deamon:
+And then, build your services images:
 
 ```
-cd src/home; docker build -t home-service:latest .
+make build
 ```
 
-and then, the checkout service:
+### Deploy
+
+To deploy the images created in the previous step, execute the following:
 
 ```
-cd src/checkout; docker build -t checkout-service:latest .
+make deploy
 ```
 
-##### Deploy
-
-First, it is necessary to deploy the namespaces:ß
-
-```
-kubectl apply -f namespaces.yml
-```
-
-and then, the services:
-
-```
-cd src/home; kubectl apply -f deployment-config.yml
-```
-
-```
-cd src/checkout; kubectl apply -f deployment-config.yml
-```
-
-##### Expose the application to the host machine
+## Exposing the application to the host machine
 
 As this solution was originally built in mac os and the docker driver has a network limitation on it, we cannot use the pattern <minikube ip>:<nginx svc node port>.
 
 More details on minikube docs: [link](https://minikube.sigs.k8s.io/docs/handbook/accessing/#using-minikube-service-with-tunnel)
 
-\* Consider chaging driver to hyperkit on mac to cover more features
+\* Consider chaging driver to hyperkit on mac to cover more features.
 
 ```
-kubectl port-forward svc/nginx-gateway 8080:80 -n nginx-gateway
+make expose
 ```
 
-You can also launch minikube dashboard to follow your cluster resources:
+## Monitoring the cluster resources
+
+Launch minikube dashboard to monitor your cluster resources:
 
 ```
 minikube dashboard
 ```
 
-##### Testing the app endpoints
+## Testing the app endpoints
 
+### Blue-Green release feature
 
+To test the blue-green deployment do the following on your terminal or hit it directly in your browser:
+
+```
+curl --location 'http://localhost:8080/site/home'
+```
+
+The configuration is set to be routing traffic equally between the blue and the green deployments, so that as you hit this url multiple times, you will see that the response messages will be interleaving between `Welcome to Blue Home service!` and `Welcome to Green Home service!`.
+
+### Multiple Backend services unified under the API Gateway
+
+We have two services deployed under our API Gateway. The home one(GET /site/home), tested in the previous step, and the checkout service, being served by our API Gateway as follows:
+
+```
+curl --location 'http://localhost:8080/site/checkout'
+```
+
+## Useful commands:
+
+While monitoring your cluster you might find these commands useful:
+
+```shell
+kubectl get namespaces
+kubectl get {kubernetes object} -n {namespace} # kubernetes object: [svc, pods, httproute, containers]
+kubectl get logs {containerId} -n {namespace}
+kubectl describe pod {podId} -n {namespace}
+kubectl describe httproute {podId} -n {namespace}
+kubectl describe deployment {podId} -n {namespace}
+```
 
 ## Executing the load tests:
 
