@@ -1,13 +1,21 @@
 SHELL := /bin/bash
 
+install-nginx-gateway:
+	@printf "\n\n++++++++++++++ STARTING install-nginx-gateway ++++++++++++++++++\n";
+	kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.0/standard-install.yaml;
+	kubectl kustomize "https://github.com/nginxinc/nginx-gateway-fabric/config/crd/gateway-api/standard?ref=v1.4.0" | kubectl apply -f -;
+	kubectl apply -f https://raw.githubusercontent.com/nginxinc/nginx-gateway-fabric/v1.4.0/deploy/crds.yaml;
+	kubectl apply -f https://raw.githubusercontent.com/nginxinc/nginx-gateway-fabric/v1.4.0/deploy/nodeport/deploy.yaml;
+	@printf "\n\n++++++++++++++ DONE WITH install-nginx-gateway ++++++++++++++++++\n";
+
 build-home:
 	@printf "\n\n++++++++++++++ STARTING build-home ++++++++++++++++++\n";
 	cd src/home; docker build -t home-service:latest .
 	@printf "\n\n++++++++++++++ DONE WITH build-home ++++++++++++++++++\n";
 
-build-canary-home:
+build-green-home:
 	@printf "\n\n++++++++++++++ STARTING build-home ++++++++++++++++++\n";
-	cd src/canary-home; docker build -t canary-home-service:latest .
+	cd src/green-home; docker build -t green-home-service:latest .
 	@printf "\n\n++++++++++++++ DONE WITH build-home ++++++++++++++++++\n";
 
 build-checkout:
@@ -25,9 +33,9 @@ deploy-home:
 	cd src/home; kubectl apply -f deployment-config.yml
 	@printf "\n\n++++++++++++++ DONE WITH deploy-home ++++++++++++++++++\n";
 
-deploy-canary-home:
+deploy-green-home:
 	@printf "\n\n++++++++++++++ STARTING deploy-home ++++++++++++++++++\n";
-	cd src/canary-home; kubectl apply -f deployment-config.yml
+	cd src/green-home; kubectl apply -f deployment-config.yml
 	@printf "\n\n++++++++++++++ DONE WITH deploy-home ++++++++++++++++++\n";
 
 deploy-checkout:
@@ -40,11 +48,11 @@ deploy-gateway-api:
 	kubectl apply -f gateway-api-config.yml
 	@printf "\n\n++++++++++++++ DONE WITH deploy-gateway-api ++++++++++++++++++\n";
 
-build: build-home build-canary-home build-checkout
+build: build-home build-green-home build-checkout
 	@printf "\n\n++++++++++++++ STARTING build ++++++++++++++++++\n";
 	@printf "\n\n++++++++++++++ DONE WITH build ++++++++++++++++++\n";
 
-deploy: deploy-namespaces deploy-home deploy-canary-home deploy-checkout deploy-gateway-api
+deploy: deploy-namespaces deploy-home deploy-green-home deploy-checkout deploy-gateway-api
 	@printf "\n\n++++++++++++++ STARTING deploy ++++++++++++++++++\n";
 	@printf "\n\n++++++++++++++ DONE WITH deploy ++++++++++++++++++\n";
 

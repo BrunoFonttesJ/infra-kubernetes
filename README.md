@@ -11,22 +11,19 @@ Concepts explored:
 - Namespaces
 - Gateway API
   - Nginx Gateway Fabric
+  - Blue-Green release
   - Canary release
-    - Weight based
 
 Roadmap:
-  - Gateway API
-    - HTTPS TLS setup
-  - Canary release
-    - http header based
-  - Blue-green deployment
-  - Log agent configuration
-  - Container registry
-  - CI configuration
-  - CD configuration
-  - Auto scaling
-    - Cluster auto scaling - Cloud Provider
-  
+
+- Gateway API
+  - HTTPS TLS setup
+- Log agent configuration
+- Container registry
+- CI configuration
+- CD configuration
+- Auto scaling
+  - Cluster auto scaling - Cloud Provider
 
 Pre-requirements:
 
@@ -116,7 +113,6 @@ More details on minikube docs: [link](https://minikube.sigs.k8s.io/docs/handbook
 
 \* Consider chaging driver to hyperkit on mac to cover more features.
 
-
 ```
 make expose
 ```
@@ -131,19 +127,19 @@ minikube dashboard
 
 ## Testing the app endpoints
 
-### Canary release feature
+### Blue-Green release feature
 
-To test the home resource and the canary release by weight feature:
+To test the blue-green deployment do the following on your terminal or hit it directly in your browser:
 
 ```
 curl --location 'http://localhost:8080/site/home'
 ```
 
-As you hit this url multiple times, you will see that the messages will be interleaving between `Welcome to Home service!` and `Welcome to Canary Home service!`.
+The configuration is set to be routing traffic equally between the blue and the green deployments, so that as you hit this url multiple times, you will see that the response messages will be interleaving between `Welcome to Blue Home service!` and `Welcome to Green Home service!`.
 
 ### Multiple Backend services unified under the API Gateway
 
-As you could check on the previous step, we have the GET /site/home API, pointing to the home services using a canary release approach, and additionaly, we also have another service deployed, the checkout service, being served by our API Gateway as follows:
+We have two services deployed under our API Gateway. The home one(GET /site/home), tested in the previous step, and the checkout service, being served by our API Gateway as follows:
 
 ```
 curl --location 'http://localhost:8080/site/checkout'
@@ -152,6 +148,7 @@ curl --location 'http://localhost:8080/site/checkout'
 ## Useful commands:
 
 While monitoring your cluster you might find these commands useful:
+
 ```shell
 kubectl get namespaces
 kubectl get {kubernetes object} -n {namespace} # kubernetes object: [svc, pods, httproute, containers]
