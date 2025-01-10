@@ -49,10 +49,22 @@ spec:
     - name: shared-gateway
       namespace: infra-ns
   rules:
+    # Rule 1: Canary traffic (path match only)
     - matches:
         - path:
             value: /site/checkout/ # this route needs to be defined in the api as well
       backendRefs:
         - name: checkout
+          namespace: site-ns
+          port: 80
+    # Rule 2: Canary traffic (specific header + path)
+    - matches:
+        - path:
+            value: /site/checkout/ # this route needs to be defined in the api as well
+        - headers:
+            - name: X-Canary
+              value: true
+      backendRefs:
+        - name: canary-checkout
           namespace: site-ns
           port: 80

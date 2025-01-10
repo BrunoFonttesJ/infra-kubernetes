@@ -8,6 +8,8 @@ install-nginx-gateway:
 	kubectl apply -f https://raw.githubusercontent.com/nginxinc/nginx-gateway-fabric/v1.4.0/deploy/nodeport/deploy.yaml;
 	@printf "\n\n++++++++++++++ DONE WITH install-nginx-gateway ++++++++++++++++++\n";
 
+### builds ###
+
 build-home:
 	@printf "\n\n++++++++++++++ STARTING build-home ++++++++++++++++++\n";
 	cd src/home; docker build -t home-service:latest .
@@ -22,6 +24,13 @@ build-checkout:
 	@printf "\n\n++++++++++++++ STARTING build-checkout ++++++++++++++++++\n";
 	cd src/checkout; docker build -t checkout-service:latest .
 	@printf "\n\n++++++++++++++ DONE WITH build-checkout ++++++++++++++++++\n";
+
+build-canary-checkout:
+	@printf "\n\n++++++++++++++ STARTING build-checkout ++++++++++++++++++\n";
+	cd src/canary-checkout; docker build -t canary-checkout-service:latest .
+	@printf "\n\n++++++++++++++ DONE WITH build-checkout ++++++++++++++++++\n";
+
+### deploys ###
 
 deploy-namespaces:
 	@printf "\n\n++++++++++++++ STARTING deploy-namespaces ++++++++++++++++++\n";
@@ -43,16 +52,21 @@ deploy-checkout:
 	cd src/checkout; kubectl apply -f deployment-config.yml
 	@printf "\n\n++++++++++++++ DONE WITH deploy-checkout ++++++++++++++++++\n";
 
+deploy-canary-checkout:
+	@printf "\n\n++++++++++++++ STARTING deploy-checkout ++++++++++++++++++\n";
+	cd src/canary-checkout; kubectl apply -f deployment-config.yml
+	@printf "\n\n++++++++++++++ DONE WITH deploy-checkout ++++++++++++++++++\n";
+
 deploy-gateway-api:
 	@printf "\n\n++++++++++++++ STARTING deploy-gateway-api ++++++++++++++++++\n";
 	kubectl apply -f gateway-api-config.yml
 	@printf "\n\n++++++++++++++ DONE WITH deploy-gateway-api ++++++++++++++++++\n";
 
-build: build-home build-green-home build-checkout
+build: build-home build-green-home build-checkout build-canary-checkout
 	@printf "\n\n++++++++++++++ STARTING build ++++++++++++++++++\n";
 	@printf "\n\n++++++++++++++ DONE WITH build ++++++++++++++++++\n";
 
-deploy: deploy-namespaces deploy-home deploy-green-home deploy-checkout deploy-gateway-api
+deploy: deploy-namespaces deploy-home deploy-green-home deploy-checkout deploy-canary-checkout deploy-gateway-api
 	@printf "\n\n++++++++++++++ STARTING deploy ++++++++++++++++++\n";
 	@printf "\n\n++++++++++++++ DONE WITH deploy ++++++++++++++++++\n";
 
