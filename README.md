@@ -16,6 +16,7 @@ Concepts explored:
 
 Roadmap:
 
+- Helm implementation
 - Gateway API
   - HTTPS TLS setup
 - Log agent configuration
@@ -30,6 +31,26 @@ Pre-requirements:
 - [Docker](https://docs.docker.com/engine/install/)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
 - [minikube](https://minikube.sigs.k8s.io/docs/start/)
+
+## Introduction to the kubernetes resources used in the project
+
+If you are already familiar with basic kubernetes components, presented as follows, you can skip this section and move on to the next one.
+
+### Pod
+The pod is the smallest deployable unit in kubernetes architecture. It consists of a group of one or more containers with shared storage and network resources.
+
+### Service
+
+The service is an abstraction to help exposing a group of pods over a network so that clients can interact with it.
+
+### Deployment
+
+The deployment is responsible for changing the actual state to the desired state at a controlled rate.
+
+Initially, you describe a desired state in the deployment and then, new replicas will be created to meet the desired state. From that point on, either if the desired state is updated by an auto-scaling policy or the actual state changes due to a pod getting unhealthy, the deployment will be changing the actual state to meet the desire one.
+
+
+### HorizontalPodAutoscaler
 
 ## Start minikube:
 
@@ -136,6 +157,14 @@ curl --location 'http://localhost:8080/site/home'
 ```
 
 The configuration is set to be routing traffic equally between the blue and the green deployments, so that as you hit this url multiple times, you will see that the response messages will be interleaving between `Welcome to Blue Home service!` and `Welcome to Green Home service!`.
+
+Usually in this deployment strategy, 100% of the traffic is sent to the green deployment and the blue one is kept intact, so that, in case of finding any issues on the green version, it is possible to just switch to the blue deployment(stable) with minimal complexity and impact.
+
+In this example, just for proof-of-concept purposes, we have it weighted, simulating a scenario that demands an incremental risk management. This hybrid model is useful for high-traffic and mission-critical systems where an instant cutover may introduce unnaceptable risks. This approach is also similar to a canary release based on weight.
+
+### Canary relase feature(Based on header)
+
+TBD
 
 ### Multiple Backend services unified under the API Gateway
 
