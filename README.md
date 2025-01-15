@@ -32,22 +32,44 @@ Pre-requirements:
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
 - [minikube](https://minikube.sigs.k8s.io/docs/start/)
 
-## Introduction to the kubernetes resources used in the project
+## Introduction to Kubernetes
 
-If you are already familiar with basic kubernetes components, presented as follows, you can skip this section and move on to the next one.
+If you are already familiar with kubernetes and its basic components,you can skip this section and move on to the next one.
+
+### Concepts:
+
+- **Platform**: Structures that allow multiple products to be built within the same technical framework.
+- **Application Workload**: The amount of work that needs to be done in a period of time.
+- **State**: A set of declarative configurations that define the application version, memory, cpu and auto-scaling rules among others.
+  - **Desired state**: The desired state can be changed when occurs a new deployment or an auto-scaling rule triggering, for example.
+  - **Current state**: It is what kubernetes checks constantly to see if there are any differences against the desired state. If so, it will start the necessary tasks to change it towards the desired one.
+- **Service discovery**: A process capable of identifing and connecting services within a network without requiring hardcoded ip addresses. This is achievable through dns records.
+- **Sidecar containers**: Secondary containers that run along with the main application container, within the same Pod. They are used to extend or enhance the main functionaly of an app by providing additional services or functionalities such as logging, monitoring and security.
+
+### Kubernetes
+Kubernetes is a platform for managing containerized workloads. Some of its main responsabilities are as follows:
+- Reliability: Keep the infrastructure current state equal to the desired state.
+- Scalability: Change the desired state accordingly to pre-defined metrics such as memory usage and cpu usage.
+- Load Balancing: Load balance traffic among deployment replicas.
+- Facilitates zero-downtime deployments through strategies such as Rolling updates, Canary and Blue-Green.
 
 ### Pod
 The pod is the smallest deployable unit in kubernetes architecture. It consists of a group of one or more containers with shared storage and network resources.
+Usually if it has more than one container it is going to be due the use of a sidecar pattern.
 
 ### Service
-
-The service is an abstraction to help exposing a group of pods over a network so that clients can interact with it.
+The service is an abstraction that helps exposing a group of pods over a network so that clients can interact with it.
 
 ### Deployment
-
 The deployment is responsible for changing the actual state to the desired state at a controlled rate.
+Some of the main configuration that can be done in the deployment are listed as follows:
+- target container
+- resources(cpu/memory)
+- liveness probe endpoint
+- desired amount of replicas
 
-Initially, you describe a desired state in the deployment and then, new replicas will be created to meet the desired state. From that point on, either if the desired state is updated by an auto-scaling policy or the actual state changes due to a pod getting unhealthy, the deployment will be changing the actual state to meet the desire one.
+Initially, given the desired state described in the deployment(based on the configurations listed above and others) and then, the deployment controller will allocate the required resources and deploy the target application. 
+From that point on, if the desired state is updated by a HorizontalPodAutoscaler policy or the actual state changes due to a pod becoming unhealthy, the deployment controller will be changing the actual state to meet the desired one.
 
 
 ### HorizontalPodAutoscaler
