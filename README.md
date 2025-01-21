@@ -73,6 +73,7 @@ From that point on, if the desired state is updated by a HorizontalPodAutoscaler
 
 
 ### HorizontalPodAutoscaler
+TBD
 
 ## Start minikube:
 
